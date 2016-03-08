@@ -1,0 +1,137 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module is="minimalist-clock">
+  <style>
+    :host
+    {
+      display: block;
+      border-radius: 50%;
+      position: relative;
+      border-style: solid;
+      box-sizing: border-box;
+    }
+
+    #canvas
+    {
+    }
+  </style>
+  <template>
+    <canvas id="canvas"></canvas>
+  </template>
+  <script>
+    (function()
+    {
+      var _PI = Math.PI;
+      var _2PI = Math.PI * 2;
+      var _PId2 = Math.PI / 2;
+
+      Polymer
+      ({
+        is: "minimalist-clock",
+        properties:
+        {
+          color:
+          {
+            type:String,
+            value:"#74949f"
+          },
+          bezel:
+          {
+            type: Number,
+            value: 4
+          },
+          hour: Number,
+          minute: Number
+        },
+        attached: function()
+        {
+          var instance = this;
+
+          var animate = false;
+
+          var w = instance.clientWidth;
+          var r = w / 2;
+
+          instance.style.borderColor = instance.color;
+          instance.style.borderWidth = instance.bezel + "px";
+
+          var canvas = document.querySelector("#canvas");
+          canvas.width = w;
+          canvas.height = w;
+
+          var ctx = canvas.getContext("2d");
+
+          ctx.strokeStyle = instance.color;
+          ctx.lineCap = "round";
+
+          // target minute angle
+          var tm = _PI + (instance.minute / 60) * _2PI;
+          // target hour angle
+          var th = (_PI + (instance.hour / 12) * _2PI) + ((instance.minute / 60) / 12 * _2PI);
+
+          var tick = _2PI / 30;
+
+          var am = _PI;
+          var ah = _PI;
+
+          function render()
+          {
+            ctx.clearRect(0,0,w,w);
+            am += tick;
+            ah += tick / 12;
+
+            if(ah >= th)
+            {
+              am = tm;
+              ah = th;
+            }
+
+            ctx.save();
+            ctx.translate(r,r);
+
+            // render minute
+            ctx.save();
+            ctx.lineWidth = instance.bezel;
+            ctx.rotate(am);
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, r * 0.9);
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.restore();
+
+            // render hour
+            ctx.save();
+            ctx.lineWidth = instance.bezel * 2;
+            ctx.rotate(ah);
+
+            ctx.beginPath();
+            ctx.moveTo(0, r * 0.05);
+            ctx.lineTo(0, r * 0.6);
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.restore();
+
+            ctx.restore();
+
+            if(animate && ah != th)
+            {
+              requestAnimationFrame(render);
+            }
+          }
+
+          instance.animate = function()
+          {
+            animate = true;
+            render();
+          }
+
+          render();
+        }
+      });
+    })();
+  </script>
+<dom-module>
