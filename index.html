@@ -13,6 +13,14 @@
     </style>
   </head>
   <body>
-    <minimalist-clock hour="4" minute="30"></minimalist-clock>
+    <minimalist-clock hour="19" minute="30" animate></minimalist-clock>
+    <minimalist-clock hour="19" minute="30"></minimalist-clock>
+    <script>
+      window.addEventListener("WebComponentsReady", function(e)
+      {
+        var clocks = document.querySelectorAll("minimalist-clock");
+        setTimeout(function(){clocks[1].animate = true;},1000);
+      });
+    </script>
   </body>
 </html>

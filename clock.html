@@ -41,13 +41,17 @@
             value: 4
           },
           hour: Number,
-          minute: Number
+          minute: Number,
+          animate:
+          {
+            type:Boolean,
+            value:false,
+            notify:true
+          }
         },
         attached: function()
         {
           var instance = this;
-
-          var animate = false;
 
           var w = instance.clientWidth;
           var r = w / 2;
@@ -76,6 +80,15 @@
 
           function render()
           {
+            if(ah / th < 0.9)
+            {
+              tick = _2PI / 15;
+            }
+            else
+            {
+              tick = _2PI / ( 60 * ah / th);
+            }
+            
             ctx.clearRect(0,0,w,w);
             am += tick;
             ah += tick / 12;
@@ -117,17 +130,19 @@
 
             ctx.restore();
 
-            if(animate && ah != th)
+            if(instance.animate && ah != th)
             {
               requestAnimationFrame(render);
             }
           }
 
-          instance.animate = function()
+          instance.addEventListener("animate-changed", function(e)
           {
-            animate = true;
-            render();
-          }
+            if(e.detail)
+            {
+              render();
+            }
+          });
 
           render();
         }
