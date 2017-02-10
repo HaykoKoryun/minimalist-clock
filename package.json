@@ -1,0 +1,14 @@
+{
+  "name": "minimalist-clock",
+  "version": "3.0.0",
+  "main": "minimalist-clock.html",
+  "repository": "https://github.com/HaykoKoryun/minimalist-clock.git",
+  "author": "Hayko Koryun",
+  "license": "MIT",
+  "dependencies": {
+    "@polymer/polymer": "^1.2.5-npm-test.2"
+  },
+  "devDependencies": {
+    "@polymer/iron-component-page": "^0.0.3"
+  }
+}
